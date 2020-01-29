@@ -1,5 +1,5 @@
 using API.Config;
-using API.DataStore;
+using DataStore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -18,8 +18,6 @@ namespace API
             configuration.Bind("ReactivitiesConfiguration", _reactiveConfiguration);
         }
 
-
-
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -34,7 +32,7 @@ namespace API
             });
             services.AddControllers();
             services.AddSingleton(_reactiveConfiguration);
-            services.AddSingleton<ReactivitiesDocumentStoreHolder>();
+            services.AddSingleton<DocumentStoreHolder>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

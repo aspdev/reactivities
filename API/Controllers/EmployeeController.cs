@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using API.DataStore;
+using DataStore;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
 using Raven.Client.Documents;
@@ -10,7 +10,7 @@ namespace API.Controllers
     public class EmployeeController : Controller
     {
         private readonly IDocumentStore _store;
-        public EmployeeController(ReactivitiesDocumentStoreHolder storeHolder)
+        public EmployeeController(DocumentStoreHolder storeHolder)
         {
             _store = storeHolder.Store;
         }
