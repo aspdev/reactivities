@@ -26,9 +26,9 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<EmployeeDto>> Details(string id)
+        public async Task<ActionResult<EmployeeDto>> Details(RavenId<Employee> id)
         {
-            return await _mediator.Send(new Details.Query { Id = IdHelper.ForModel(typeof(Employee), id) });
+            return await _mediator.Send(new Details.Query { Id = id });
         }
     }
 }

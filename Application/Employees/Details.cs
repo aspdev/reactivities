@@ -13,7 +13,7 @@ namespace Application.Employees
     {
         public class Query : IRequest<EmployeeDto>
         {
-            public string Id { get; set; }
+            public RavenId<Employee> Id { get; set; }
         }
 
         public class Handler : IRequestHandler<Query, EmployeeDto>
@@ -27,7 +27,7 @@ namespace Application.Employees
             {
                 using (var session = _store.OpenAsyncSession())
                 {
-                    var employee = await session.LoadAsync<Employee>(request.Id);
+                    var employee = await session.LoadAsync<Employee>(request.Id.Value);
 
                     var employeeDto = new EmployeeDto
                     {
