@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using DataStore;
 using Domain;
 using MediatR;
+using Raven.Client.Documents;
 
 namespace Application.Employees
 {
@@ -12,14 +14,20 @@ namespace Application.Employees
 
         public class Handler : IRequestHandler<Query, List<Employee>>
         {
-            public Handler()
+            private readonly IDocumentStore _store;
+            public Handler(DocumentStoreHolder storeHolder)
             {
-
+                _store = storeHolder.Store;
             }
 
-            public Task<List<Employee>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<List<Employee>> Handle(Query request, CancellationToken cancellationToken)
             {
-                throw new System.NotImplementedException();
+                using (var session = _store.OpenAsyncSession())
+                {
+                    var employees = await session.Query<Employee>().ToListAsync();
+
+                    return employees;
+                }
             }
         }
     }

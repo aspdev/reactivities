@@ -1,10 +1,13 @@
 using API.Config;
+using Application.Employees;
 using DataStore;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 
 namespace API
 {
@@ -30,7 +33,11 @@ namespace API
                     .AllowAnyMethod();
                 });
             });
-            services.AddControllers();
+
+            services.AddMediatR(typeof(List.Handler).Assembly);
+            services.AddControllers().AddNewtonsoftJson(
+                opt => opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
+
             services.AddSingleton(_reactiveConfiguration);
             services.AddSingleton<DocumentStoreHolder>();
         }

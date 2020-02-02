@@ -1,29 +1,34 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using DataStore;
+using Application.Dtos;
+using Application.Employees;
+using Application.Helpers;
 using Domain;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Raven.Client.Documents;
 
 namespace API.Controllers
 {
     [Route("api/{controller}")]
-    public class EmployeeController : Controller
+    [ApiController]
+    public class EmployeeController : ControllerBase
     {
-        private readonly IDocumentStore _store;
-        public EmployeeController(DocumentStoreHolder storeHolder)
+        private readonly IMediator _mediator;
+        public EmployeeController(IMediator mediator)
         {
-            _store = storeHolder.Store;
+            _mediator = mediator;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetEmployees()
+        public async Task<ActionResult<List<Employee>>> List()
         {
-            using (var session = _store.OpenAsyncSession())
-            {
-                var employees = await session.Query<Employee>().ToListAsync();
+            return await _mediator.Send(new List.Query());
+        }
 
-                return Ok(employees);
-            }
+        [HttpGet("{id}")]
+        public async Task<ActionResult<EmployeeDto>> Details(string id)
+        {
+            return await _mediator.Send(new Details.Query { Id = IdHelper.ForModel(typeof(Employee), id) });
         }
     }
 }
